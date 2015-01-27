@@ -1,0 +1,52 @@
+/**
+ * Register your submission and choose a character
+ * For more information check out the documentation
+ * http://anitype.com/documentation
+ */
+Anitype.register('8', {
+
+  // Enter your name
+  author: 'ypag',
+
+  // Enter a personal website, must have http
+  website: 'https://github.com/ypag',
+
+  // Make your animation here
+  construct: function(two, points) {
+
+    // Reference to instance
+    var anitype = this;
+
+    // Create a Two.Polygon
+var polygon = anitype.makePolygon(points);
+    
+    var spine = anitype.makePolygon([polygon.vertices[0], polygon.vertices[1]]);
+    
+    polygon = polygon.subdivide();
+    
+    
+    // Set an initial state
+    polygon.scale = 1;
+    
+    var time = {value:0};
+    anitype.addTween(time, {
+      to: { value: 1 },
+      easing: Anitype.Easing.Sinusoidal.InOut,
+      duration: .7, 
+      start: 0,
+      update:function(){
+        if (this.value < (1/2)) {
+          polygon.beginning = this.value * 2;
+        } else {
+          polygon.beginning = 0;
+          polygon.ending = (this.value - 0.5) *2;
+        }
+      }
+    });
+
+    // Return your polygon wrapped in a group.
+    return two.makeGroup(spine, polygon);
+
+  }
+
+});
